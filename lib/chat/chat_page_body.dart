@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:chatbotui/models/messages_model.dart';
 import 'package:chatbotui/ui/ExistingCustomer.dart';
@@ -19,13 +20,25 @@ class BodyUI extends State<Body> {
 
   var val;
 
+  List<String> customerType = [];
+  List<String> serviceType = [];
+
   @override
   void initState() {
     super.initState();
     userSearchItems.clear();
+    customerType.clear();
+    serviceType.clear();
+
     for (var i = 0; i < chatMessages.length; i++) {
       userSearchItems.add(chatMessages[i]);
     }
+
+    customerType.add("New Customer");
+    customerType.add("Existing Customer");
+
+    serviceType.add("Check Processing");
+    serviceType.add("Track Check Application");
   }
 
   @override
@@ -60,150 +73,258 @@ class BodyUI extends State<Body> {
                               .text
                               .startsWith("Select")) ...[
                             Container(
-                              // margin: EdgeInsets.only(top:pDefaultPadding),
-                              width: MediaQuery.of(context).size.width * 0.80,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: pDefaultPadding * 0.5,
-                                  vertical: pDefaultPadding / 2),
-                              decoration: BoxDecoration(
-                                  color: userSearchItems[index].isSender
-                                      ? pSecondaryColor.withOpacity(0.9)
-                                      : pSecondaryColor.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(35)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ListTile(
-                                    dense: true,
-                                    contentPadding:
-                                        EdgeInsets.only(left: 0.0, right: 0.0),
-                                    title: Transform.translate(
-                                      offset: Offset(-16, 0),
+                                // margin: EdgeInsets.only(top:pDefaultPadding),
+                                width: MediaQuery.of(context).size.width * 0.80,
+                                height: 150.0,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: pDefaultPadding * 0.5,
+                                    vertical: pDefaultPadding / 2),
+                                decoration: BoxDecoration(
+                                    color: userSearchItems[index].isSender
+                                        ? pSecondaryColor.withOpacity(0.9)
+                                        : pSecondaryColor.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(35)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.all(5.0),
                                       child: Text(
-                                        'New Customer',
+                                        "Please Select your option",
                                         style: TextStyle(
                                           fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    leading: Radio(
-                                      value: 1,
-                                      groupValue: val,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          val = value;
-                                          userSearchItems.add(
-                                            ChatMessage(
-                                              text: "New Customer",
-                                              messageType: ChatMessageType.text,
-                                              messageStatus:
-                                                  MessageStatus.viewed,
-                                              isSender: true,
-                                            ),
-                                          );
-                                          Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () async {
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      NewCustomer()),
-                                            ).then((value) {
-                                              print(
-                                                  "newCustomerResponse ${value[1]}");
-                                              if (value[1] == 00) {
-                                                setState(() {
-                                                  userSearchItems.add(
-                                                    ChatMessage(
-                                                      text:
-                                                          "New Customer Created",
-                                                      messageType:
-                                                          ChatMessageType.text,
-                                                      messageStatus:
-                                                          MessageStatus.viewed,
-                                                      isSender: false,
+                                    Container(
+                                      height: 100.0,
+                                      child: ListView.builder(
+                                        itemCount: 2,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Column(
+                                            children: <Widget>[
+                                              InkWell(
+                                                child: ListTile(
+                                                  dense: true,
+                                                  contentPadding:
+                                                      EdgeInsets.only(
+                                                          left: 0.0,
+                                                          right: 0.0),
+                                                  title: Transform.translate(
+                                                    offset: Offset(3, -3),
+                                                    child: Text(
+                                                      customerType[index]
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
                                                     ),
-                                                  );
-                                                  Future.delayed(
-                                                      new Duration(
-                                                          milliseconds: 500),
-                                                      () {
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  if (index == 0) {
+                                                    userSearchItems.add(
+                                                      ChatMessage(
+                                                        text: "New Customer",
+                                                        messageType:
+                                                            ChatMessageType
+                                                                .text,
+                                                        messageStatus:
+                                                            MessageStatus
+                                                                .viewed,
+                                                        isSender: true,
+                                                      ),
+                                                    );
+                                                    Future.delayed(
+                                                        const Duration(
+                                                            milliseconds: 500),
+                                                        () async {
+                                                      await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                NewCustomer()),
+                                                      ).then((value) {
+                                                        print(
+                                                            "newCustomerResponse ${value[1]}");
+                                                        if (value[1] == 00) {
+                                                          setState(() {
+                                                            userSearchItems.add(
+                                                              ChatMessage(
+                                                                text: "Your Application submitted successful",
+                                                                messageType: ChatMessageType.text,
+                                                                messageStatus: MessageStatus.viewed,
+                                                                isSender: false,
+                                                              ),
+                                                            );
+                                                            Future.delayed(
+                                                                new Duration(
+                                                                    milliseconds:
+                                                                        500),
+                                                                () {
+                                                              setState(() {
+                                                                userSearchItems
+                                                                    .add(
+                                                                  ChatMessage(
+                                                                    text:
+                                                                        "Your Application Reference ID: ${get6DigitNumber()}",
+                                                                    messageType:
+                                                                        ChatMessageType
+                                                                            .text,
+                                                                    messageStatus:
+                                                                        MessageStatus
+                                                                            .viewed,
+                                                                    isSender:
+                                                                        false,
+                                                                  ),
+                                                                );
+                                                              });
+                                                            });
+                                                          });
+                                                        }
+                                                      });
+                                                    });
+                                                  } else {
                                                     setState(() {
                                                       userSearchItems.add(
                                                         ChatMessage(
-                                                          text:
-                                                              "Your Customer ID: 123456",
-                                                          messageType:
-                                                              ChatMessageType
-                                                                  .text,
+                                                          text: "Existing Customer",
+                                                          messageType: ChatMessageType.text,
                                                           messageStatus:
-                                                              MessageStatus
-                                                                  .viewed,
-                                                          isSender: false,
+                                                          MessageStatus.viewed,
+                                                          isSender: true,
                                                         ),
                                                       );
+                                                      Future.delayed(
+                                                          const Duration(milliseconds: 500),
+                                                              () async {
+                                                            await Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      ExistingCustomer()),
+                                                            ).then((value) {
+                                                              if (value[1] == 00) {
+                                                                setState(() {
+                                                                  userSearchItems.add(
+                                                                    ChatMessage(
+                                                                      text: "Login Successful",
+                                                                      messageType: ChatMessageType.text,
+                                                                      messageStatus: MessageStatus.viewed,
+                                                                      isSender: false,
+                                                                    ),
+                                                                  );
+                                                                  Future.delayed(
+                                                                      new Duration(
+                                                                          milliseconds:
+                                                                          500),
+                                                                          () {
+                                                                        setState(() {
+                                                                          userSearchItems
+                                                                              .add(
+                                                                            ChatMessage(
+                                                                              text:
+                                                                              "Available Services",
+                                                                              messageType:
+                                                                              ChatMessageType
+                                                                                  .text,
+                                                                              messageStatus:
+                                                                              MessageStatus
+                                                                                  .viewed,
+                                                                              isSender:
+                                                                              false,
+                                                                            ),
+                                                                          );
+                                                                        });
+                                                                      });
+                                                                });
+                                                              }
+                                                            });
+                                                          });
                                                     });
-                                                  });
-                                                });
-                                              }
-                                            });
-                                          });
-                                        });
-                                      },
-                                      activeColor: Colors.green,
+                                                  }
+                                                },
+                                              ),
+                                              Divider(),
+                                            ],
+                                          );
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                  ListTile(
-                                    dense: true,
-                                    contentPadding:
-                                        EdgeInsets.only(left: 0.0, right: 0.0),
-                                    title: Transform.translate(
-                                      offset: Offset(-16, 0),
+                                  ],
+                                )),
+                          ] else if(userSearchItems[index]
+                              .text
+                              .startsWith("Available")) ...[
+                            Container(
+                              // margin: EdgeInsets.only(top:pDefaultPadding),
+                                width: MediaQuery.of(context).size.width * 0.80,
+                                height: 150.0,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: pDefaultPadding * 0.5,
+                                    vertical: pDefaultPadding / 2),
+                                decoration: BoxDecoration(
+                                    color: userSearchItems[index].isSender
+                                        ? pSecondaryColor.withOpacity(0.9)
+                                        : pSecondaryColor.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(35)),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.all(5.0),
                                       child: Text(
-                                        'Existing Customer',
+                                        "Available Services",
                                         style: TextStyle(
                                           fontSize: 14.0,
-                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    leading: Radio(
-                                      value: 2,
-                                      groupValue: val,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          val = value;
-                                          userSearchItems.add(
-                                            ChatMessage(
-                                              text: "Existing Customer",
-                                              messageType: ChatMessageType.text,
-                                              messageStatus:
-                                                  MessageStatus.viewed,
-                                              isSender: true,
-                                            ),
+                                    Container(
+                                      height: 100.0,
+                                      child: ListView.builder(
+                                        itemCount: 2,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Column(
+                                            children: <Widget>[
+                                              InkWell(
+                                                child: ListTile(
+                                                  dense: true,
+                                                  contentPadding:
+                                                  EdgeInsets.only(
+                                                      left: 0.0,
+                                                      right: 0.0),
+                                                  title: Transform.translate(
+                                                    offset: Offset(3, -3),
+                                                    child: Text(
+                                                      serviceType[index]
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        fontSize: 14.0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                onTap: () {
+
+                                                },
+                                              ),
+                                              Divider(),
+                                            ],
                                           );
-                                          Future.delayed(
-                                              const Duration(milliseconds: 500),
-                                              () async {
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ExistingCustomer()),
-                                            ).then((value) {
-                                              print("newCustomerResponse ${value[1]}");
-                                            });
-                                          });
-                                        });
-                                      },
-                                      activeColor: Colors.green,
+                                        },
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                  ],
+                                )),
                           ] else ...[
                             Container(
                                 // margin: EdgeInsets.only(top:pDefaultPadding),
@@ -497,4 +618,13 @@ class MessageTick extends StatelessWidget {
       ),
     );
   }
+}
+
+String get6DigitNumber() {
+  Random random = Random();
+  String number = '';
+  for (int i = 0; i < 8; i++) {
+    number = number + random.nextInt(9).toString();
+  }
+  return number;
 }
