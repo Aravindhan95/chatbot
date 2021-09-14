@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:math';
 
 import 'package:chatbotui/models/messages_model.dart';
+import 'package:chatbotui/ui/ChequeProcessing.dart';
 import 'package:chatbotui/ui/ExistingCustomer.dart';
 import 'package:chatbotui/ui/NewCustomer.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,8 @@ class BodyUI extends State<Body> {
   List<String> customerType = [];
   List<String> serviceType = [];
 
+  late TextEditingController userTextController;
+
   @override
   void initState() {
     super.initState();
@@ -36,9 +39,12 @@ class BodyUI extends State<Body> {
 
     customerType.add("New Customer");
     customerType.add("Existing Customer");
+    customerType.add("Track Application");
 
-    serviceType.add("Check Processing");
-    serviceType.add("Track Check Application");
+    serviceType.add("Cheque Processing");
+    serviceType.add("Track Cheque Status");
+
+    userTextController = new TextEditingController();
   }
 
   @override
@@ -75,7 +81,7 @@ class BodyUI extends State<Body> {
                             Container(
                                 // margin: EdgeInsets.only(top:pDefaultPadding),
                                 width: MediaQuery.of(context).size.width * 0.80,
-                                height: 150.0,
+                                height: 250.0,
                                 padding: EdgeInsets.symmetric(
                                     horizontal: pDefaultPadding * 0.5,
                                     vertical: pDefaultPadding / 2),
@@ -98,9 +104,9 @@ class BodyUI extends State<Body> {
                                       ),
                                     ),
                                     Container(
-                                      height: 100.0,
+                                      height: 200.0,
                                       child: ListView.builder(
-                                        itemCount: 2,
+                                        itemCount: 3,
                                         itemBuilder:
                                             (BuildContext context, int index) {
                                           return Column(
@@ -155,9 +161,14 @@ class BodyUI extends State<Body> {
                                                           setState(() {
                                                             userSearchItems.add(
                                                               ChatMessage(
-                                                                text: "Your Application submitted successful",
-                                                                messageType: ChatMessageType.text,
-                                                                messageStatus: MessageStatus.viewed,
+                                                                text:
+                                                                    "Your Application submitted successful",
+                                                                messageType:
+                                                                    ChatMessageType
+                                                                        .text,
+                                                                messageStatus:
+                                                                    MessageStatus
+                                                                        .viewed,
                                                                 isSender: false,
                                                               ),
                                                             );
@@ -182,69 +193,133 @@ class BodyUI extends State<Body> {
                                                                         false,
                                                                   ),
                                                                 );
+                                                                setState(() {
+                                                                  userSearchItems
+                                                                      .removeAt(
+                                                                          1);
+                                                                });
                                                               });
                                                             });
                                                           });
                                                         }
                                                       });
                                                     });
-                                                  } else {
+                                                  } else if (index == 1) {
                                                     setState(() {
                                                       userSearchItems.add(
                                                         ChatMessage(
-                                                          text: "Existing Customer",
-                                                          messageType: ChatMessageType.text,
+                                                          text:
+                                                              "Existing Customer",
+                                                          messageType:
+                                                              ChatMessageType
+                                                                  .text,
                                                           messageStatus:
-                                                          MessageStatus.viewed,
+                                                              MessageStatus
+                                                                  .viewed,
                                                           isSender: true,
                                                         ),
                                                       );
                                                       Future.delayed(
-                                                          const Duration(milliseconds: 500),
-                                                              () async {
-                                                            await Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      ExistingCustomer()),
-                                                            ).then((value) {
-                                                              if (value[1] == 00) {
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  500),
+                                                          () async {
+                                                        await Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ExistingCustomer()),
+                                                        ).then((value) {
+                                                          if (value[1] == 00) {
+                                                            setState(() {
+                                                              userSearchItems
+                                                                  .add(
+                                                                ChatMessage(
+                                                                  text:
+                                                                      "Login Successful",
+                                                                  messageType:
+                                                                      ChatMessageType
+                                                                          .text,
+                                                                  messageStatus:
+                                                                      MessageStatus
+                                                                          .viewed,
+                                                                  isSender:
+                                                                      false,
+                                                                ),
+                                                              );
+                                                              Future.delayed(
+                                                                  new Duration(
+                                                                      milliseconds:
+                                                                          500),
+                                                                  () {
                                                                 setState(() {
-                                                                  userSearchItems.add(
+                                                                  userSearchItems
+                                                                      .add(
                                                                     ChatMessage(
-                                                                      text: "Login Successful",
-                                                                      messageType: ChatMessageType.text,
-                                                                      messageStatus: MessageStatus.viewed,
-                                                                      isSender: false,
+                                                                      text:
+                                                                          "Available Services",
+                                                                      messageType:
+                                                                          ChatMessageType
+                                                                              .text,
+                                                                      messageStatus:
+                                                                          MessageStatus
+                                                                              .viewed,
+                                                                      isSender:
+                                                                          false,
                                                                     ),
                                                                   );
-                                                                  Future.delayed(
-                                                                      new Duration(
-                                                                          milliseconds:
-                                                                          500),
-                                                                          () {
-                                                                        setState(() {
-                                                                          userSearchItems
-                                                                              .add(
-                                                                            ChatMessage(
-                                                                              text:
-                                                                              "Available Services",
-                                                                              messageType:
-                                                                              ChatMessageType
-                                                                                  .text,
-                                                                              messageStatus:
-                                                                              MessageStatus
-                                                                                  .viewed,
-                                                                              isSender:
-                                                                              false,
-                                                                            ),
-                                                                          );
-                                                                        });
-                                                                      });
+                                                                  setState(() {
+                                                                    userSearchItems
+                                                                        .removeAt(
+                                                                            1);
+                                                                  });
                                                                 });
-                                                              }
+                                                              });
                                                             });
+                                                          }
+                                                        });
+                                                      });
+                                                    });
+                                                  } else if (index == 2) {
+                                                    setState(() {
+                                                      userSearchItems.add(
+                                                        ChatMessage(
+                                                          text:
+                                                              "Track Application",
+                                                          messageType:
+                                                              ChatMessageType
+                                                                  .text,
+                                                          messageStatus:
+                                                              MessageStatus
+                                                                  .viewed,
+                                                          isSender: true,
+                                                        ),
+                                                      );
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  500),
+                                                          () async {
+                                                        setState(() {
+                                                          userSearchItems.add(
+                                                            ChatMessage(
+                                                              text:
+                                                                  "Please enter your reference number",
+                                                              messageType:
+                                                                  ChatMessageType
+                                                                      .text,
+                                                              messageStatus:
+                                                                  MessageStatus
+                                                                      .viewed,
+                                                              isSender: false,
+                                                            ),
+                                                          );
+                                                          setState(() {
+                                                            userSearchItems
+                                                                .removeAt(1);
                                                           });
+                                                        });
+                                                      });
                                                     });
                                                   }
                                                 },
@@ -257,11 +332,11 @@ class BodyUI extends State<Body> {
                                     ),
                                   ],
                                 )),
-                          ] else if(userSearchItems[index]
+                          ] else if (userSearchItems[index]
                               .text
                               .startsWith("Available")) ...[
                             Container(
-                              // margin: EdgeInsets.only(top:pDefaultPadding),
+                                // margin: EdgeInsets.only(top:pDefaultPadding),
                                 width: MediaQuery.of(context).size.width * 0.80,
                                 height: 150.0,
                                 padding: EdgeInsets.symmetric(
@@ -297,9 +372,9 @@ class BodyUI extends State<Body> {
                                                 child: ListTile(
                                                   dense: true,
                                                   contentPadding:
-                                                  EdgeInsets.only(
-                                                      left: 0.0,
-                                                      right: 0.0),
+                                                      EdgeInsets.only(
+                                                          left: 0.0,
+                                                          right: 0.0),
                                                   title: Transform.translate(
                                                     offset: Offset(3, -3),
                                                     child: Text(
@@ -307,14 +382,114 @@ class BodyUI extends State<Body> {
                                                           .toString(),
                                                       style: TextStyle(
                                                         fontWeight:
-                                                        FontWeight.bold,
+                                                            FontWeight.bold,
                                                         fontSize: 14.0,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                                 onTap: () {
-
+                                                  if (serviceType[index]
+                                                          .toString() ==
+                                                      "Cheque Processing") {
+                                                    setState(() {
+                                                      userSearchItems.add(
+                                                        ChatMessage(
+                                                          text:
+                                                              "Cheque Processing",
+                                                          messageType:
+                                                              ChatMessageType
+                                                                  .text,
+                                                          messageStatus:
+                                                              MessageStatus
+                                                                  .viewed,
+                                                          isSender: true,
+                                                        ),
+                                                      );
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  500),
+                                                          () async {
+                                                        await Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  ChequeProcessing()),
+                                                        ).then((value) {
+                                                          if (value[1] == 00) {
+                                                            setState(() {
+                                                              userSearchItems
+                                                                  .add(
+                                                                ChatMessage(
+                                                                  text:
+                                                                      "Cheque Submitted successful",
+                                                                  messageType:
+                                                                      ChatMessageType
+                                                                          .text,
+                                                                  messageStatus:
+                                                                      MessageStatus
+                                                                          .viewed,
+                                                                  isSender:
+                                                                      false,
+                                                                ),
+                                                              );
+                                                              Future.delayed(
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          500),
+                                                                  () async {
+                                                                setState(() {
+                                                                  userSearchItems
+                                                                      .add(
+                                                                    ChatMessage(
+                                                                      text:
+                                                                          "Service request number ${get6DigitNumber()}",
+                                                                      messageType:
+                                                                          ChatMessageType
+                                                                              .text,
+                                                                      messageStatus:
+                                                                          MessageStatus
+                                                                              .viewed,
+                                                                      isSender:
+                                                                          false,
+                                                                    ),
+                                                                  );
+                                                                });
+                                                              });
+                                                              setState(() {
+                                                                userSearchItems
+                                                                    .removeAt(
+                                                                        3);
+                                                              });
+                                                            });
+                                                          }
+                                                        });
+                                                      });
+                                                    });
+                                                  } else if (serviceType[index]
+                                                          .toString() ==
+                                                      "Track Cheque Status") {
+                                                    setState(() {
+                                                      userSearchItems.add(
+                                                        ChatMessage(
+                                                          text:
+                                                              "Please enter your service request number",
+                                                          messageType:
+                                                              ChatMessageType
+                                                                  .text,
+                                                          messageStatus:
+                                                              MessageStatus
+                                                                  .viewed,
+                                                          isSender: false,
+                                                        ),
+                                                      );
+                                                      setState(() {
+                                                        userSearchItems
+                                                            .removeAt(3);
+                                                      });
+                                                    });
+                                                  }
                                                 },
                                               ),
                                               Divider(),
@@ -404,13 +579,14 @@ class BodyUI extends State<Body> {
                           left: 6.0,
                         ),
                         child: TextField(
-                          keyboardType: TextInputType.multiline,
+                          keyboardType: TextInputType.number,
                           minLines: 2,
                           maxLines: 4,
                           decoration: InputDecoration(
                             hintText: '  Type your message',
                             border: InputBorder.none,
                           ),
+                          controller: userTextController,
                         ),
                       ),
                     ),
@@ -424,18 +600,90 @@ class BodyUI extends State<Body> {
                 color: Colors.green,
               ),
               onPressed: () {
-                setState(
-                  () {
-                    userSearchItems.add(
-                      ChatMessage(
-                        text: "New Message Added",
-                        messageType: ChatMessageType.text,
-                        messageStatus: MessageStatus.viewed,
-                        isSender: false,
-                      ),
-                    );
-                  },
-                );
+                if (userTextController.text.isNotEmpty) {
+                  for (var i = 0; i < userSearchItems.length; i++) {
+                    print("printValue ${userSearchItems[i]
+                        .text
+                        .toString()}");
+                    if (userSearchItems[i]
+                        .text
+                        .toString() == "Please enter your service request number") {
+                      setState(
+                            () {
+                          userSearchItems.add(
+                            ChatMessage(
+                              text: userTextController.text.toString(),
+                              messageType: ChatMessageType.text,
+                              messageStatus: MessageStatus.viewed,
+                              isSender: true,
+                            ),
+                          );
+
+                          setState(() {
+                            if (userSearchItems.last.text.toString() ==
+                                userTextController.text.toString()) {
+                              Future.delayed(new Duration(milliseconds: 500),
+                                      () {
+                                    setState(() {
+                                      userSearchItems.add(
+                                        ChatMessage(
+                                          text:
+                                          "Processing the check will take 2 days",
+                                          messageType: ChatMessageType.text,
+                                          messageStatus: MessageStatus.viewed,
+                                          isSender: false,
+                                        ),
+                                      );
+                                    });
+                                  });
+                            }
+                          });
+
+                          userTextController.text = "";
+                        },
+                      );
+                    } else if(userSearchItems[i]
+                        .text
+                        .toString() == "Please enter your reference number") {
+                      setState(
+                        () {
+                          userSearchItems.add(
+                            ChatMessage(
+                              text: userTextController.text.toString(),
+                              messageType: ChatMessageType.text,
+                              messageStatus: MessageStatus.viewed,
+                              isSender: true,
+                            ),
+                          );
+
+                          for (var i = 0; i < userSearchItems.length; i++) {
+                            if (userSearchItems[i].text.toString() ==
+                                userTextController.text.toString()) {
+                              Future.delayed(new Duration(milliseconds: 500),
+                                  () {
+                                setState(() {
+                                  userSearchItems.add(
+                                    ChatMessage(
+                                      text:
+                                          "Pending for verification & approval",
+                                      messageType: ChatMessageType.text,
+                                      messageStatus: MessageStatus.viewed,
+                                      isSender: false,
+                                    ),
+                                  );
+                                });
+                              });
+                            }
+                          }
+                          userTextController.text = "";
+                        },
+                      );
+                    }
+                  }
+                } else {
+                  final snackBar = SnackBar(content: Text('Type Something...'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               },
             ),
           ],

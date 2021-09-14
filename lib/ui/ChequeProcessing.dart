@@ -2,35 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class NewCustomer extends StatelessWidget {
+class ChequeProcessing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("New Customer"),
+        title: Text("Cheque Processing"),
       ),
-      body: NewCustomerMainUI(),
+      body: ChequeProcessingMainUI(),
     );
   }
 }
 
-class NewCustomerMainUI extends StatefulWidget {
+class ChequeProcessingMainUI extends StatefulWidget {
   @override
-  NewCustomerUI createState() {
-    return NewCustomerUI();
+  ChequeProcessingUI createState() {
+    return ChequeProcessingUI();
   }
 }
 
-class NewCustomerUI extends State<NewCustomerMainUI> {
-  late TextEditingController customerNameController;
-  late TextEditingController fatherNameController;
-  late TextEditingController dobController;
-  late TextEditingController permanentAddressController;
-  late TextEditingController communicationAddressController;
-  late TextEditingController panController;
-  late TextEditingController aadhaarController;
-  late TextEditingController OccupationController;
-  late TextEditingController totalIncomeController;
+class ChequeProcessingUI extends State<ChequeProcessingMainUI> {
+  late TextEditingController amountController;
+  late TextEditingController dateOfIssueController;
+  late TextEditingController remitterNameController;
 
   bool panVisible = false;
   bool aadhaarVisible = false;
@@ -40,15 +34,9 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
 
   @override
   void initState() {
-    customerNameController = new TextEditingController();
-    fatherNameController = new TextEditingController();
-    dobController = new TextEditingController();
-    permanentAddressController = new TextEditingController();
-    communicationAddressController = new TextEditingController();
-    panController = new TextEditingController();
-    aadhaarController = new TextEditingController();
-    OccupationController = new TextEditingController();
-    totalIncomeController = new TextEditingController();
+    amountController = new TextEditingController();
+    dateOfIssueController = new TextEditingController();
+    remitterNameController = new TextEditingController();
   }
 
   @override
@@ -58,81 +46,6 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.95,
-            margin: EdgeInsets.all(16.0),
-            alignment: Alignment.center,
-            child: TextField(
-              textInputAction: TextInputAction.go,
-              decoration: new InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.greenAccent, width: 2.0),
-                  ),
-                  labelText: "Customer Name"),
-              controller: customerNameController,
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.95,
-            margin: EdgeInsets.all(16.0),
-            alignment: Alignment.center,
-            child: TextField(
-              textInputAction: TextInputAction.go,
-              decoration: new InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.greenAccent, width: 2.0),
-                  ),
-                  labelText: "Father Name"),
-              controller: fatherNameController,
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.95,
-            margin: EdgeInsets.all(16.0),
-            alignment: Alignment.center,
-            child: TextField(
-              textInputAction: TextInputAction.go,
-              decoration: new InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.greenAccent, width: 2.0),
-                  ),
-                  labelText: "Date of Birth"),
-              controller: dobController,
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.95,
-            margin: EdgeInsets.all(16.0),
-            alignment: Alignment.center,
-            child: TextField(
-              textInputAction: TextInputAction.go,
-              decoration: new InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.greenAccent, width: 2.0),
-                  ),
-                  labelText: "Permanent Address"),
-              controller: permanentAddressController,
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.95,
-            margin: EdgeInsets.all(16.0),
-            alignment: Alignment.center,
-            child: TextField(
-              textInputAction: TextInputAction.go,
-              decoration: new InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.greenAccent, width: 2.0),
-                  ),
-                  labelText: "Communication Address"),
-              controller: communicationAddressController,
-            ),
-          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -148,14 +61,14 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                     ),
                     alignment: Alignment.center,
                     child: TextField(
+                      enabled: false,
                       textInputAction: TextInputAction.go,
                       decoration: new InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Colors.greenAccent, width: 2.0),
                           ),
-                          labelText: "PAN"),
-                      controller: panController,
+                          labelText: "Cheque Front Side"),
                     ),
                   ),
                   Container(
@@ -219,7 +132,8 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                                 print("photo " + photo!.name.toString());
                                 setState(() {
                                   panPath = photo.name.toString();
-                                  panPath = panPath.characters.take(9).toString();
+                                  panPath =
+                                      panPath.characters.take(9).toString();
                                   panVisible = true;
                                 });
                               } else {
@@ -238,7 +152,8 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                                 print("photo " + photo!.name.toString());
                                 setState(() {
                                   panPath = photo.name.toString();
-                                  panPath = panPath.characters.take(9).toString();
+                                  panPath =
+                                      panPath.characters.take(9).toString();
                                   panVisible = true;
                                 });
                               } else {
@@ -270,14 +185,14 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                     ),
                     alignment: Alignment.center,
                     child: TextField(
+                      enabled: false,
                       textInputAction: TextInputAction.go,
                       decoration: new InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Colors.greenAccent, width: 2.0),
                           ),
-                          labelText: "AADHAAR"),
-                      controller: panController,
+                          labelText: "Cheque Back Side"),
                     ),
                   ),
                   Container(
@@ -341,7 +256,8 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                                 print("photo " + photo!.name.toString());
                                 setState(() {
                                   aadhaarPath = photo.name.toString();
-                                  aadhaarPath = aadhaarPath.characters.take(9).toString();
+                                  aadhaarPath =
+                                      aadhaarPath.characters.take(9).toString();
                                   aadhaarVisible = true;
                                 });
                               } else {
@@ -360,7 +276,8 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                                 print("photo " + photo!.name.toString());
                                 setState(() {
                                   aadhaarPath = photo.name.toString();
-                                  aadhaarPath = aadhaarPath.characters.take(9).toString();
+                                  aadhaarPath =
+                                      aadhaarPath.characters.take(9).toString();
                                   aadhaarVisible = true;
                                 });
                               } else {
@@ -388,8 +305,8 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                     borderSide:
                         BorderSide(color: Colors.greenAccent, width: 2.0),
                   ),
-                  labelText: "OCCUPATION"),
-              controller: OccupationController,
+                  labelText: "Amount"),
+              controller: amountController,
             ),
           ),
           Container(
@@ -403,8 +320,23 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
                     borderSide:
                         BorderSide(color: Colors.greenAccent, width: 2.0),
                   ),
-                  labelText: "GROSS TOTAL INCOME"),
-              controller: totalIncomeController,
+                  labelText: "Date of Issue"),
+              controller: dateOfIssueController,
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.95,
+            margin: EdgeInsets.all(16.0),
+            alignment: Alignment.center,
+            child: TextField(
+              textInputAction: TextInputAction.go,
+              decoration: new InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.greenAccent, width: 2.0),
+                  ),
+                  labelText: "Remitter Name"),
+              controller: remitterNameController,
             ),
           ),
           Container(
@@ -419,7 +351,7 @@ class NewCustomerUI extends State<NewCustomerMainUI> {
               color: Colors.blueAccent,
               textColor: Colors.white,
               onPressed: () {
-                Navigator.pop(context, ['User Created Successful', 00]);
+                Navigator.pop(context, ['Cheque submitted Successful', 00]);
               },
             ),
           ),
